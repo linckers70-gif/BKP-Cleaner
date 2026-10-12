@@ -509,6 +509,32 @@
             font-size: 14px;
         }
 
+        .download-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 22px;
+            margin-top: 22px;
+        }
+
+        .download-links a {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: #60a5fa;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .download-links a:hover {
+            color: #bfdbfe;
+            transform: translateY(-1px);
+            text-decoration: underline;
+        }
+
         .download-details {
             display: flex;
             justify-content: center;
@@ -1128,11 +1154,27 @@
                     <a href="./BKP-Cleaner-1.0.0.zip"
                        class="button button-primary"
                        download="BKP-Cleaner-1.0.0.zip">
-                        <i data-lucide="download"
+                        <i data-lucide="monitor"
                            width="19"
                            height="19"></i>
-                        Baixar agora
+                        Download para Windows
                     </a>
+
+                    <div class="download-links">
+                        <a href="https://linckers70-gif.github.io/BKP-Corporation-Support/"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            <i data-lucide="life-buoy" width="16" height="16"></i>
+                            Acessar suporte
+                        </a>
+
+                        <a href="https://linckers70-gif.github.io/doacoes-bkp-cleaner/"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            <i data-lucide="heart" width="16" height="16"></i>
+                            Apoiar / Donate
+                        </a>
+                    </div>
 
                     <div class="download-details">
 
