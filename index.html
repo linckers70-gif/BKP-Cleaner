@@ -800,7 +800,7 @@
                 <a href="#como-usar">Como usar</a>
 
                 <a href="./BKP-Cleaner-1.0.0.zip"
-                   class="nav-download"
+                   class="nav-download bkp-download-link"
                    download="BKP-Cleaner-1.0.0.zip">
                     <i data-lucide="download" width="16" height="16"></i>
                     Baixar
@@ -839,7 +839,7 @@
                 <div class="hero-actions">
 
                     <a href="./BKP-Cleaner-1.0.0.zip"
-                       class="button button-primary"
+                       class="button button-primary bkp-download-link"
                        download="BKP-Cleaner-1.0.0.zip">
                         <i data-lucide="download" width="19" height="19"></i>
                         Baixar BKP Cleaner Pro
@@ -1151,8 +1151,15 @@
                         seguindo as instruções de extração.
                     </p>
 
+                    <div class="captcha-panel" style="margin: 24px auto 16px; padding: 18px; max-width: 420px; border: 1px solid rgba(120,140,170,.28); border-radius: 16px; background: rgba(120,140,170,.07);">
+                        <h3 style="margin: 0 0 8px; font-size: 1.05rem;">Verificacao de seguranca</h3>
+                        <p style="margin: 0 0 14px;">Confirme que voce nao e um robo para continuar com o download.</p>
+                        <div id="bkp-turnstile"></div>
+                        <p id="bkp-captcha-status" role="status" aria-live="polite" style="margin: 12px 0 0; font-size: .9rem;">Complete a verificacao acima.</p>
+                    </div>
+
                     <a href="./BKP-Cleaner-1.0.0.zip"
-                       class="button button-primary"
+                       class="button button-primary bkp-download-link"
                        download="BKP-Cleaner-1.0.0.zip">
                         <i data-lucide="monitor"
                            width="19"
@@ -1331,6 +1338,60 @@
         if (window.lucide) {
             lucide.createIcons();
         }
+    </script>
+
+
+
+    <!-- Cloudflare Turnstile CAPTCHA -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=bkpTurnstileLoaded&render=explicit" async defer></script>
+    <script>
+        (function () {
+            var captchaToken = null;
+            var pendingDownload = null;
+            var status = null;
+
+            window.bkpTurnstileLoaded = function () {
+                var mount = document.getElementById("bkp-turnstile");
+                status = document.getElementById("bkp-captcha-status");
+                if (!mount || !window.turnstile) return;
+
+                window.turnstile.render(mount, {
+                    sitekey: "0x4AAAAAAFVFY2Zpl3LZrvVa",
+                    callback: function (token) {
+                        captchaToken = token;
+                        if (status) status.textContent = "Verificacao concluida. Voce ja pode baixar o arquivo.";
+                        if (pendingDownload) {
+                            var link = pendingDownload;
+                            pendingDownload = null;
+                            link.click();
+                        }
+                    },
+                    "expired-callback": function () {
+                        captchaToken = null;
+                        if (status) status.textContent = "A verificacao expirou. Confirme novamente.";
+                    },
+                    "error-callback": function () {
+                        captchaToken = null;
+                        if (status) status.textContent = "Nao foi possivel carregar a verificacao. Atualize a pagina e tente novamente.";
+                    }
+                });
+            };
+
+            document.addEventListener("click", function (event) {
+                var link = event.target.closest("a.bkp-download-link");
+                if (!link) return;
+                if (captchaToken) {
+                    // Turnstile token has been received in the browser.
+                    // Server-side validation is still required for real download protection.
+                    return;
+                }
+                event.preventDefault();
+                pendingDownload = link;
+                var panel = document.querySelector(".captcha-panel");
+                if (panel) panel.scrollIntoView({ behavior: "smooth", block: "center" });
+                if (status) status.textContent = "Complete a verificacao acima para continuar.";
+            });
+        })();
     </script>
 
 </body>
